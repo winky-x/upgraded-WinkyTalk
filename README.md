@@ -39,23 +39,3 @@ pnpm install
 pnpm dev
 
 And that your WinkyAi running on your PC.
-# 1. Delete the old Git history
-rm -rf .git
-
-# 2. Configure your identity (if you haven't yet)
-git config --global user.name "Yuvraj Chandra"
-git config --global user.email "spitfire1official@gmail.com"
-
-# 3. Initialize your new repository
-git init
-
-# 4. Add all your files
-git add .
-
-# 5. Create your first commit
-git commit -m "Initial release of Winky AI by Yuvraj Chandra"
-
-# 6. Link to your GitHub (Create a new empty repo on GitHub first)
-git remote add origin https://github.com/Winky-x/Upgraded-WinkyTalk.git
-git branch -M main
-git push -u origin main
