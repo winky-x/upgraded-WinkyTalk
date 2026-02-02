@@ -1,0 +1,20 @@
+{
+  "user_id": "yuvi",
+  "user_name": "Yuvraj",
+  "assistant_name": "Winky",
+  "llm": {
+    "provider": "google",
+    "model": "gemini-2.5-flash-native-audio-preview-12-2025",
+    "voice": "Kore"
+  },
+  "api_keys": {
+    "google": "AIzaSyArjS-xnqoa_367PSCPcjWJ1srjupcISMg",
+    "livekit_url": "wss://winkytalk-vwb6cljk.livekit.cloud",
+    "livekit_key": "APIrKafKLWrWTfE",
+    "livekit_secret": "oTibXLgFvT5B78G7m8xwPCV5v8mAVAdCLQHI2eieM17",
+    "mem0": "m0-j3UVsLmD6qN2W8HBOIik2R7un3SXucXrGECdAbHU",
+    "google_search": "AIzaSyBvN_sCvEsY02-BM9DXh71YGd09razmQws",
+    "search_engine_id": "c69bc08dfef5f4791",
+    "openweather": "66834dced46805882b92b59ff2a41204"
+  }
+}

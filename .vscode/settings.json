@@ -1,0 +1,16 @@
+{
+    "python.defaultInterpreterPath": "/workspaces/upgraded-WinkyTalk/Jarvis_code/venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.extraPaths": [
+        "/workspaces/upgraded-WinkyTalk/Jarvis_code/venv/lib/python3.12/site-packages",
+        "/workspaces/upgraded-WinkyTalk/Jarvis_code"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none"
+    },
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.indexing": true
+}
