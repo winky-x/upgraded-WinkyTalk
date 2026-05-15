@@ -25,7 +25,7 @@ export const ChatEntry = ({
   const { message, hasBeenEdited, time, locale, name } = useChatMessage(entry, messageFormatter);
 
   const isUser = entry.from?.isLocal ?? false;
-  const messageOrigin = isUser ? 'remote' : 'local';
+  const messageOrigin = isUser ? 'local' : 'remote';
 
   return (
     <li

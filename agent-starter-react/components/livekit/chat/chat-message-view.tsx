@@ -34,7 +34,7 @@ export const ChatMessageView = ({ className, children, ...props }: ChatProps) =>
   useAutoScroll(scrollContentRef);
 
   return (
-    <div ref={scrollContentRef} className={cn('flex flex-col justify-end', className)} {...props}>
+    <div ref={scrollContentRef} className={cn('flex flex-col justify-start', className)} {...props}>
       {children}
     </div>
   );

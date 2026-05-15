@@ -24,59 +24,65 @@ from livekit.agents import function_tool
 
 logger = logging.getLogger(__name__)
 
+@function_tool
 async def google_search(query: str) -> str:
     """
-    Searches Google and returns the top 3 results with heading and summary only.
-    No raw links are included to make speech output sound natural.
+    Perform a web search using DuckDuckGo API for instant answers.
+    Returns relevant search results.
     """
 
     logger.info(f"Query प्राप्त हुई: {query}")
 
-    api_key = config.get_api_key("google_search") or os.getenv("GOOGLE_SEARCH_API_KEY")
-    search_engine_id = config.get_api_key("search_engine_id") or os.getenv("SEARCH_ENGINE_ID")
-
-    if not api_key or not search_engine_id:
-        missing = []
-        if not api_key:
-            missing.append("GOOGLE_SEARCH_API_KEY")
-        if not search_engine_id:
-            missing.append("SEARCH_ENGINE_ID")
-        return f"Missing environment variables: {', '.join(missing)}"
-
-    url = "https://www.googleapis.com/customsearch/v1"
-    params = {
-        "key": api_key,
-        "cx": search_engine_id,
-        "q": query,
-        "num": 3
-    }
+    if not query or query.strip() == "":
+        return "Please provide a search query."
 
     try:
-        logger.info("Google Custom Search API को request भेजी जा रही है...")
-        response = requests.get(url, params=params, timeout=10)
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Request failed: {e}")
-        return f"Google Search API request failed: {e}"
+        # Use DuckDuckGo Instant Answer API with User-Agent header
+        logger.info("Searching DuckDuckGo for: " + query)
+        url = "https://api.duckduckgo.com/"
+        params = {
+            "q": query,
+            "format": "json",
+            "no_html": 1
+        }
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        logger.info(f"DuckDuckGo response status: {response.status_code}")
+        
+        if response.status_code in [200, 202]:  # Both OK and Accepted are valid
+            data = response.json()
+            
+            results = []
+            
+            # Get abstract (main answer)
+            if data.get("Abstract"):
+                heading = data.get("Heading", "Result")
+                abstract = data.get("Abstract", "")
+                results.append(f"**{heading}**\n{abstract}")
+            
+            # Get direct answer
+            if data.get("Answer") and not data.get("Abstract"):
+                results.append(f"Answer: {data.get('Answer')}")
+            
+            # Get related topics
+            related = data.get("RelatedTopics", [])
+            for item in related[:2]:
+                if isinstance(item, dict) and item.get("Text"):
+                    results.append(item.get("Text"))
+            
+            if results:
+                formatted = "Here are the search results:\n\n"
+                for i, result in enumerate(results[:3], 1):
+                    formatted += f"{i}. {result}\n\n"
+                logger.info(f"Returning {len(results)} results")
+                return formatted.strip()
+                
+    except Exception as e:
+        logger.error(f"DuckDuckGo search failed: {e}")
 
-    if response.status_code != 200:
-        logger.error(f"Google API error: {response.status_code} - {response.text}")
-        return f"Google Search API में error आया: {response.status_code} - {response.text}"
-
-    data = response.json()
-    results = data.get("items", [])
-
-    if not results:
-        logger.info("कोई results नहीं मिले।")
-        return "कोई results नहीं मिले।"
-
-    # Create a natural, speech-friendly summary
-    formatted = "Here are the top results:\n"
-    for i, item in enumerate(results, start=1):
-        title = item.get("title", "No title")
-        snippet = item.get("snippet", "").strip()
-        formatted += f"{i}. {title}. {snippet}\n\n"
-
-    return formatted.strip()
+    return f"Could not find results for '{query}'. Please try a different search term."
 
 
 async def get_current_datetime() -> str:

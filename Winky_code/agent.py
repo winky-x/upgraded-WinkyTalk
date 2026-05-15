@@ -18,6 +18,8 @@ from livekit.plugins import google, openai, silero, noise_cancellation
 
 # Import your custom modules
 from Jarvis_prompts import load_prompts
+from advanced_search import advanced_search
+from jarvis_get_whether import get_weather
 from memory_loop import MemoryExtractor
 from config_manager import ConfigManager
 from dotenv import load_dotenv
@@ -128,11 +130,12 @@ def perform_web_search(query: str) -> str:
         return f"❌ Search error: {str(e)}"
     
 class Assistant(Agent):
-    def __init__(self, chat_ctx, llm_instance, instructions_text) -> None:
+    def __init__(self, chat_ctx, llm_instance, instructions_text, tools=None) -> None:
         super().__init__(
             instructions=instructions_text,
             chat_ctx=chat_ctx,
-            llm=llm_instance
+            llm=llm_instance,
+            tools=tools
         )
 
 
@@ -247,7 +250,8 @@ async def entrypoint(ctx: JobContext):
     agent = Assistant(
         chat_ctx=initial_ctx, 
         llm_instance=llm_instance, 
-        instructions_text=instructions_prompt
+        instructions_text=instructions_prompt,
+        tools=[advanced_search, get_weather]
     )
     
     # Try different start() signatures based on your LiveKit version

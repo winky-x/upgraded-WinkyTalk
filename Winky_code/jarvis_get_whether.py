@@ -21,6 +21,7 @@ async def get_current_city():
         return "Unknown"
 
 
+@function_tool
 async def get_weather(city: str = "") -> str:
 
     """

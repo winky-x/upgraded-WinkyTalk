@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --fg0: #000000;
+  --fg0: #1151ff;
   --fg1: #3b3b3b;
   --fg2: #4d4d4d;
   --fg3: #636363;

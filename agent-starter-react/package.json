@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"pnpm next:dev\" \"pnpm backend\"",
+    "dev": "concurrently --kill-others \"pnpm next:dev\" \"pnpm backend\"",
     "next:dev": "next dev --turbopack",
-    "start:n8n": "npx --yes n8n start",
 
-    "backend": "cd ../Winky_code && ./venv/bin/python agent.py dev",
+    "backend": "bash -c 'cd ../Winky_code && source venv/bin/activate && PYTHONUNBUFFERED=1 python -O agent.py dev'",
 
     "build": "next build",
     "start": "next start",

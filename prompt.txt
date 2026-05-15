@@ -1,0 +1,15 @@
+General Knowledge (requiring up-to-date info)
+"Who won the latest cricket match?"
+"What's the current stock price of Tesla?"
+"Tell me about the newest iPhone model"
+"What's the latest on the election results?"
+
+Search-Specific Commands
+"Search for recent space missions"
+"Find information about the latest movie releases"
+"Look up the current COVID-19 statistics"
+
+Conversational with Search
+"Can you find me some good restaurants in my city?"
+"What's the best way to learn Python in 2024?"
+"Tell me about upcoming festivals this month"
