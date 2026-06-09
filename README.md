@@ -4,7 +4,7 @@
 ---
 
 ## 🌟 Overview
-Winky AI is a powerful, locally-hosted assistant designed for seamless automation and interaction. Formerly known as Jarvis, this upgraded version features improved stability and a refined user interface.
+Winky AI is a powerful, locally-hosted assistant designed for seamless automation and interaction. Formerly known as WinkyTalk, this upgraded version features improved stability and a refined user interface.
 
 ## 🛠️ Prerequisites
 Before installation, ensure your system has the following tools:

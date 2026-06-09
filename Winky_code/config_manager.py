@@ -65,7 +65,7 @@ class ConfigManager:
         """
         if "user_id" not in self._config:
             # Fallback: Use current user_name as base for ID, or generate one
-            # Using user_name ensures backward compat (memories attached to "Gaurav" stay with "Gaurav")
+            # Using user_name ensures backward compat (memories attached to the user stay with them)
             current_name = self.get("user_name", "primary_user")
             # Sanitize to be a clean ID (optional, but keeping it same as name for backward compat is safer for Mem0)
             self._config["user_id"] = current_name
@@ -103,7 +103,7 @@ class ConfigManager:
     
     def get_llm_config(self) -> Dict[str, str]:
         """Helper to get LLM config"""
-        return self.get("llm", {"provider": "google", "model": "gemini-2.5-flash-native-audio-preview-09-2025"})
+        return self.get("llm", {"provider": "google", "model": "gemini-2.5-flash-native-audio-latest"})
 
     def get_mem0_key(self) -> Optional[str]:
         """Helper to get Mem0 API key"""

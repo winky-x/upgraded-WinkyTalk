@@ -1,0 +1,54 @@
+# PROACTIVE PC AGENT PLAN: "ACTION-FIRST" UPGRADE
+
+## 1. THE PROBLEM: "PASSIVE REASONING"
+Currently, the agent is too cautious. It tries to "see" a search bar before it even opens the app. If it doesn't see the bar, it gives up. This is why it failed your Spotify request.
+
+## 2. THE SOLUTION: "TRY -> FOCUS -> ACT"
+We will change the core logic from **Vision-First** to **Action-First**.
+
+### Phase A: Proactive App Launching
+- **The Rule:** If a user asks for an app (Spotify, Notepad, Chrome), the agent MUST call `launch_app` immediately.
+- **Improved Registry:** Add every common Windows app (Spotify, Discord, Steam, Word) to `app_registry.py`.
+- **Focus Verification:** After launching, use `pygetwindow` to confirm the app is the "Active Window" before doing anything else.
+
+### Phase B: Shortcut-Driven Navigation (The "Fast Path")
+Instead of searching for buttons visually (which is slow and can fail), the agent will use standard Windows shortcuts:
+- **Spotify:** Launch -> `Ctrl+L` (Focus Search) -> Type Playlist Name -> `Enter`.
+- **Notepad:** Launch -> Type Text -> `Ctrl+S` (Save).
+- **Chrome:** Launch -> `Ctrl+L` (Address Bar) -> Type URL -> `Enter`.
+- **Global:** Use `Win+S` to search for any app that isn't in our registry.
+
+### Phase C: Vision as a "Smart Fallback"
+Vision will now be used only when shortcuts don't exist:
+1. **Try Shortcuts first** (Fastest, 0.1s).
+2. **If that fails, use Vision** to find the button/pixel (Slower, 2s).
+3. **If Vision fails, ask for help.**
+
+---
+
+## 3. DETAILED MODULE UPGRADES
+
+### 1. `app_registry.py` (The Brain)
+- Expand to include 20+ common apps.
+- Add "Default Hotkeys" for each app (e.g., Spotify search is `Ctrl+L`).
+
+### 2. `pc_controller.py` (The Hands)
+- Add a `smart_type(text, press_enter=True)` function.
+- Add `ensure_window_focus(app_name)` to make sure we aren't typing into the wrong window.
+
+### 3. `Winky_prompts.py` (The Personality/Logic)
+- **New Persona:** "Proactive PC Operator".
+- **Instruction:** "Never say you can't do it until you've at least tried to launch the app and send a keyboard shortcut."
+- **Chain of Thought:** "User wants X -> Launch X -> Wait 1s -> Focus X -> Send Hotkey -> Type -> Done."
+
+---
+
+## 4. EXECUTION ROADMAP
+
+1. **PROACTIVE LAUNCH:** Update `agent.py` and `app_registry.py` to launch apps without waiting for vision.
+2. **HOTKEY INTEGRATION:** Add specific "Action Chains" for Spotify and Notepad (e.g., `open_spotify_and_play(playlist)`).
+3. **OS-LEVEL TASKS:** Implement a "Notepad Automation" tool that creates, types, and saves a file entirely via keyboard.
+4. **STRESS TEST:** Force the agent to open 5 different apps in a row to ensure focus management works perfectly.
+
+## 5. GOAL
+The agent should feel like a human is sitting at the keyboard. It doesn't "look" for the search bar; it just hits `Ctrl+L` because it *knows* that's where the search bar is.

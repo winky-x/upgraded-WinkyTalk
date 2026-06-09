@@ -94,11 +94,12 @@ export function App({ appConfig }: AppProps) {
       })
       .catch(err => console.error("Failed to fetch config for button name:", err));
   }, [startButtonText]);
-
   return (
     <main className="relative">
+      {/* Top Header Fade/Barrier to prevent messages from overlapping visualizer */}
+      <div className="fixed top-0 left-0 right-0 h-32 md:h-36 bg-black/80 backdrop-blur-md z-40 border-b border-white/5 pointer-events-none" />
       <div className="absolute top-4 right-4 z-50">
-        <Button variant="outline" size="icon" onClick={() => router.push('/settings')}>
+        <Button variant="outline" size="icon" className="glass-button" onClick={() => router.push('/settings')}>
           {/* <Settings className="h-[1.2rem] w-[1.2rem]" /> */}
           <span className="font-bold">⚙️</span>
           <span className="sr-only">Settings</span>

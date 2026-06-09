@@ -23,7 +23,7 @@ export default function SetupPage() {
         user_name: '',
         assistant_name: 'Winky', // Default Value
         llm_provider: 'google',
-        llm_model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
+        llm_model: 'gemini-2.5-flash-native-audio-latest',
         llm_voice: 'Puck',
         api_key: '',
         livekit_url: '',
@@ -44,7 +44,7 @@ export default function SetupPage() {
         setFormData({
             ...formData,
             llm_provider: value,
-            llm_model: isGoogle ? 'gemini-live-2.5-flash-preview-native-audio-09-2025' : 'gpt-4o-realtime-preview',
+            llm_model: isGoogle ? 'gemini-2.5-flash-native-audio-latest' : 'gpt-4o-realtime-preview',
             llm_voice: isGoogle ? 'Puck' : 'alloy'
         });
     };
@@ -131,7 +131,7 @@ export default function SetupPage() {
                                     <Input
                                         id="user_id"
                                         name="user_id"
-                                        placeholder="unique_handle (e.g. gaurav_01)"
+                                        placeholder="unique_handle (e.g. yuvraj_01)"
                                         required
                                         value={formData.user_id}
                                         onChange={(e) => {
@@ -208,6 +208,8 @@ export default function SetupPage() {
                                         <SelectContent className="bg-slate-950 border-cyan-500/50 text-cyan-300 max-h-[200px]">
                                             {formData.llm_provider === 'google' ? (
                                                 <>
+                                                    <SelectItem value="gemini-2.5-flash-native-audio-latest">gemini-2.5-flash-native-audio-latest</SelectItem>
+                                                    <SelectItem value="gemini-3.1-flash-live-preview">gemini-3.1-flash-live-preview</SelectItem>
                                                     <SelectItem value="gemini-2.0-flash-exp">gemini-2.0-flash-exp</SelectItem>
                                                     <SelectItem value="gemini-2.0-flash-live-001">gemini-2.0-flash-live-001</SelectItem>
                                                     <SelectItem value="gemini-2.5-flash-native-audio-preview-09-2025">gemini-2.5-flash-native-audio-preview-09-2025</SelectItem>

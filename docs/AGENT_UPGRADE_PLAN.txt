@@ -1,0 +1,84 @@
+# AGENT UPGRADE PLAN: LOCAL PC AI AGENT (WINKY-OS)
+
+## 1. OBJECTIVE
+Transform the existing LiveKit/Gemini voice assistant into a functional "Local PC Agent" that can see the user's screen and control hardware (Mouse/Keyboard) in real-time.
+
+## 2. CORE CAPABILITIES
+- **Visual Grounding:** See the screen via high-speed screenshots (processed <2s).
+- **Hardware Control:** Native control of Mouse and Keyboard.
+- **App Automation:** Direct launching and navigation of Chrome (YouTube), Notepad, VS Code, etc.
+- **Google Search Grounding:** Native integration with Google Search for real-time, cited information with low-latency token streaming.
+- **Zero-Hallucination Loop:** Verify visual elements before clicking and anchor text answers in live search results.
+
+---
+
+## 3. TECHNICAL ARCHITECTURE
+
+### A. The "Vision-Action" Loop
+1. **Trigger:** User says "Open YouTube and play Lo-Fi."
+2. **Visual Check:** Agent takes a 1080p screenshot using `mss`.
+3. **Gemini Vision (Fast):** Gemini 1.5/2.0 Flash identifies the Chrome icon coordinates.
+4. **Hardware Execution:** `PyAutoGUI` moves mouse and double-clicks.
+5. **Observation:** Agent takes another screenshot to confirm Chrome is open.
+
+### B. Speed Optimization (Low Latency)
+- **MSS (Multiple Screen Shot):** Using `mss` instead of `Pillow` for <50ms screen captures.
+- **Image Compression:** Downscale screenshots to 720p/low-quality JPEG before sending to Gemini to reduce latency.
+- **Streamed Grounding:** Utilize Gemini's native `google_search` tool to stream tokens immediately to the UI as search results are processed, ensuring the user sees "thinking" and "searching" progress in real-time.
+- **Vision Pre-Caching:** Keep the Gemini Vision session "warm" to avoid cold-start delays.
+
+### C. Hallucination Prevention
+- **Coordinate Validation:** The agent will not click unless Gemini returns a high-confidence JSON object with `[x, y]` coordinates.
+- **Sequential Chains:** Instead of guessing where "Search" is, the agent must "Locate" -> "Move" -> "Verify" -> "Click".
+
+---
+
+## 4. NEW MODULES TO BE ADDED
+
+1. `Winky_code/pc_controller.py`: 
+   - Functions: `click(x,y)`, `type(text)`, `hotkey(key1, key2)`, `scroll(direction)`.
+2. `Winky_code/vision_engine.py`:
+   - Integration with Gemini Flash for coordinate detection.
+   - Screen capture logic using `mss`.
+3. `Winky_code/app_registry.py`:
+   - Mapping of common apps to their executable paths/commands.
+
+---
+
+## 5. REQUIREMENTS AUDIT
+
+### Already Installed:
+- `google-genai` (1.60.0)
+- `pillow` (12.1.0)
+- `psutil` (7.2.1)
+- `requests` (2.32.5)
+
+### MISSING (Must be installed):
+- `pyautogui`: For hardware control.
+- `mss`: For ultra-fast screenshots.
+- `pygetwindow`: To track active window titles/bounds.
+- `opencv-python`: (Optional) for local template matching if Gemini is slow.
+
+---
+
+## 6. EXECUTION STEPS
+
+### Step 1: Backend Infrastructure
+- Install missing Python dependencies.
+- Create `pc_controller.py` as a standalone toolset.
+- Create `vision_engine.py` with optimized screenshot logic.
+
+### Step 2: Agent Integration
+- Register new tools in `agent.py`.
+- Update `Winky_prompts.py` to give the agent its "PC Operator" persona.
+- Define a strict `System_Action` protocol to prevent accidental clicks.
+
+### Step 3: UI Feedback (Minor)
+- Add a small "System Status" indicator to show when the "Local Agent" is active.
+- *Note: No major UI changes as per instructions.*
+
+---
+
+## 7. USER SAFETY & CONTROL
+- **Fail-Safe:** User can move the mouse to any corner of the screen to abort Agent actions instantly.
+- **Visual Awareness:** The user sees every mouse movement and click performed by the agent.

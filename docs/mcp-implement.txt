@@ -1,0 +1,74 @@
+Comprehensive Architecture Plan for Scalable MCP Integration in WinkyTalk
+
+  1. Background & Motivation
+  The current tool implementation in agent.py relies on hardcoding a flat list of functions directly into the LiveKit agent initialization. The tools are a mix of PC
+  controller functions, weather fetching, and screen reading. Furthermore, there is an existing comprehensive_mcp_tools.py that is currently inactive but contains dozens of
+  valuable system and file utilities.
+
+  The goal is to transition to a true Model Context Protocol (MCP) architecture. MCP is an open standard developed by Anthropic (https://modelcontextprotocol.io) that
+  standardizes how AI models access external tools and data sources.
+
+  2. Scope & Impact
+  By deploying a custom Winky MCP Server, we decouple the agent's logic from the tool execution logic.
+   * Scalability: We can add 100+ tools to the MCP server without bloating the agent's memory or prompt limits. The MCP client handles dynamic discovery.
+   * Stability: Errors in a tool (e.g., a file read error or a PyAutoGUI exception) are isolated within the MCP server process, preventing the main LiveKit voice agent from
+     crashing.
+   * Reusability: The MCP server can be reused by other interfaces (e.g., a text-based chat interface or another agent instance).
+
+  3. Proposed Solution Architecture
+
+  We will implement a standard MCP Client-Server model using stdio for local inter-process communication.
+
+  A. The Winky MCP Server (winky_mcp_server.py)
+  We will utilize the official Python mcp SDK to create a robust server.
+
+  The server will expose:
+   1. System/File Tools (Migrated from comprehensive_mcp_tools.py): read_file, list_directory, get_system_info, etc.
+   2. PC Controller Tools (Migrated from pc_controller.py): mouse_move, keyboard_type, launch_app, etc.
+   3. Vision Tools: Screen capture and analysis.
+
+  B. The MCP Client (agent.py update)
+  The LiveKit agent will no longer import tools directly. Instead, it will:
+   1. Launch the MCP server as a subprocess.
+   2. Connect to the server via standard input/output (stdio).
+   3. Request the list of available tools using the standardized MCP protocol.
+   4. Dynamically map these tools into the LiveKit AgentSession.
+
+  4. Implementation Steps
+
+  Phase 1: Environment Preparation
+   * Ensure mcp (the official SDK) is installed in the Python virtual environment.
+   * Clean up the current experimental and broken mcp_client folder which contains outdated integration logic.
+
+  Phase 2: Build the Winky MCP Server
+   * Create a new master server file Winky_code/winky_mcp_server.py.
+   * Initialize the standard mcp.server.Server. We will use the standard Server for maximum control.
+   * Wrap the existing functions from comprehensive_mcp_tools.py and pc_controller.py and register them as tools with the server.
+   * Set up a stdio transport runner mcp.server.stdio.stdio_server().
+
+  Phase 3: Agent Integration
+   * Update agent.py to become an MCP client.
+   * Implement mcp.client.stdio.stdio_client to spawn python winky_mcp_server.py.
+   * Use mcp.client.session.ClientSession to connect and communicate.
+   * Implement a bridge function that converts MCP tool definitions (JSON Schema) into LiveKit FunctionTool objects dynamically so the AI can use them seamlessly.
+
+  Phase 4: Testing & Hardening
+   * Verify tool discovery logs inside the agent.
+   * Stress test the server by calling tools rapidly (testing the error boundary).
+   * Ensure PyAutoGUI/PC control tools execute cleanly from the subprocess without blocking the main voice thread.
+
+  5. Alternatives Considered
+   * HTTP/SSE Server: Running the MCP server on a local network port (e.g., localhost:8000). While this allows easier debugging via external HTTP clients, it introduces
+     unnecessary network overhead, latency, and port conflict risks. stdio is much more efficient, secure, and stable for local-only agent environments.
+   * Keeping the Current Architecture: Not an option, as it lacks scalability and fault isolation as the toolset grows.
+
+  6. Migration & Rollback
+   * Migration: The change will be implemented safely. We will build the server side completely independently. When integrating into agent.py, we will leave the old imports
+     commented out.
+   * Rollback: If the MCP integration proves unstable during testing, agent.py can be reverted to its previous state instantly, as the actual tool logic in pc_controller.py
+     remains untouched.
+
+  7. Sources
+   * Model Context Protocol Documentation: https://modelcontextprotocol.io/introduction
+   * MCP Python SDK Reference: https://github.com/modelcontextprotocol/python-sdk
+   * LiveKit Agents Toolkit Tooling: https://docs.livekit.io/agents/concepts/tool-calling/

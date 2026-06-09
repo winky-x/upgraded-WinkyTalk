@@ -8,7 +8,7 @@ import shutil
 
 # --- Configuration ---
 REQUIRED_PYTHON_MAJOR = 3
-REQUIRED_PYTHON_MINOR = 13
+REQUIRED_PYTHON_MINORS = [12, 13]
 REQUIRED_NODE_VERSION_STR = "v20.19.6" # Exact string from node -v
 
 # --- ANSI Colors ---
@@ -36,32 +36,35 @@ def get_base_dir():
 
 def check_python(fix=False):
     """
-    Checks if the CURRENT running python is 3.13.
+    Checks if the CURRENT running python is 3.12 or 3.13.
     If fix=True, prompts user to download (and then must exit).
     """
     current_ver = sys.version_info
-    is_valid = (current_ver.major == REQUIRED_PYTHON_MAJOR and current_ver.minor == REQUIRED_PYTHON_MINOR)
+    is_valid = (current_ver.major == REQUIRED_PYTHON_MAJOR and current_ver.minor in REQUIRED_PYTHON_MINORS)
     
     if is_valid:
         print_success(f"Python {current_ver.major}.{current_ver.minor} detected")
         return True
     
-    print_error(f"Python {REQUIRED_PYTHON_MAJOR}.{REQUIRED_PYTHON_MINOR} is required. Detected: {current_ver.major}.{current_ver.minor}")
+    print_error(f"Python 3.12 or 3.13 is required. Detected: {current_ver.major}.{current_ver.minor}")
     
     if not fix:
         return False
         
     print(f"\n{Colors.BOLD}Options:{Colors.ENDC}")
     print("[1] Download Python 3.13")
-    print("[2] Exit")
+    print("[2] Continue anyway (Risky)")
+    print("[3] Exit")
     
-    choice = input(f"\n{Colors.CYAN}Select option [1-2]: {Colors.ENDC}")
+    choice = input(f"\n{Colors.CYAN}Select option [1-3]: {Colors.ENDC}")
     
     if choice == "1":
         print_step("Opening Python download page...")
         webbrowser.open("https://www.python.org/downloads/release/python-3130/")
         print_warning("ACTION REQUIRED: Install Python 3.13, check 'Add to PATH', and RESTART this terminal.")
-        sys.exit(0) # Logic requires restart
+        sys.exit(0)
+    elif choice == "2":
+        return True
     return False
 
 def check_node(fix=False):
@@ -171,7 +174,7 @@ def check_and_update_hash(marker_path, source_file):
 def setup_backend():
     print(f"\n{Colors.HEADER}=== Backend Environment ==={Colors.ENDC}")
     root = get_base_dir()
-    backend_dir = os.path.join(root, "Jarvis_code")
+    backend_dir = os.path.join(root, "Winky_code")
     venv_dir = os.path.join(backend_dir, "venv")
     
     # Check Venv

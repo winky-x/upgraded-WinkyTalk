@@ -16,5 +16,5 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   accentDark: '#1fd5f9',
   startButtonText: 'Talk To Winky',
 
-  agentName: undefined,
+  agentName: 'winky',
 };

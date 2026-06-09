@@ -40,9 +40,16 @@ export const SessionView = ({
   const [chatOpen, setChatOpen] = useState(false);
   const { messages, send } = useChatAndTranscription();
   const room = useRoomContext();
+  const [controlBarAnimationDone, setControlBarAnimationDone] = useState(false);
+
+  useEffect(() => {
+    if (!sessionStarted) {
+      setControlBarAnimationDone(false);
+    }
+  }, [sessionStarted]);
 
   useDebugMode({
-    enabled: process.env.NODE_END !== 'production',
+    enabled: process.env.NODE_ENV !== 'production',
   });
 
   async function handleSendMessage(message: string) {
@@ -124,14 +131,15 @@ export const SessionView = ({
         </div>
       </ChatMessageView>
 
-      <div className="bg-background mp-12 fixed top-0 right-0 left-0 h-32 md:h-36">
-        {/* skrim */}
-        <div className="from-background absolute bottom-0 left-0 h-12 w-full translate-y-full bg-gradient-to-b to-transparent" />
-      </div>
+
 
       <MediaTiles chatOpen={chatOpen} />
 
-      <div className="bg-background fixed right-0 bottom-0 left-0 z-50 px-3 pt-2 pb-3 md:px-12 md:pb-12">
+      {/* Bottom Gradient Fade to smoothly obscure chat messages before they pass behind the chat input */}
+      <div className="fixed bottom-0 left-0 right-0 h-40 md:h-48 bg-gradient-to-t from-black via-black/90 to-transparent z-40 pointer-events-none" />
+
+      <div className="fixed right-0 bottom-0 left-0 z-50 px-3 pb-3 md:px-12 md:pb-6 bg-transparent pointer-events-none">
+        <div className="pointer-events-auto">
         <motion.div
           key="control-bar"
           initial={{ opacity: 0, translateY: '100%' }}
@@ -140,6 +148,12 @@ export const SessionView = ({
             translateY: sessionStarted ? '0%' : '100%',
           }}
           transition={{ duration: 0.3, delay: sessionStarted ? 0.5 : 0, ease: 'easeOut' }}
+          onAnimationComplete={() => {
+            if (sessionStarted) {
+              setControlBarAnimationDone(true);
+            }
+          }}
+          style={controlBarAnimationDone && sessionStarted ? { transform: 'none' } : {}}
         >
           <div className="relative z-10 mx-auto w-full max-w-2xl">
             {appConfig.isPreConnectBufferEnabled && (
@@ -171,9 +185,8 @@ export const SessionView = ({
               onSendMessage={handleSendMessage}
             />
           </div>
-          {/* skrim */}
-          <div className="from-background border-background absolute top-0 left-0 h-12 w-full -translate-y-full bg-gradient-to-t to-transparent" />
         </motion.div>
+        </div>
       </div>
     </section>
   );

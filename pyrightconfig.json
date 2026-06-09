@@ -1,0 +1,4 @@
+{
+  "include": ["Winky_code"],
+  "exclude": ["**/node_modules", "**/__pycache__", "Winky_code/venv"]
+}

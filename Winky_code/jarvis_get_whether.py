@@ -45,7 +45,7 @@ async def get_weather(city: str = "") -> str:
         return "Environment variables में OpenWeather API key नहीं मिली।"
 
     if not city:
-        city = get_current_city()
+        city = await get_current_city()
 
     logger.info(f"City के लिए weather fetch किया जा रहा है।: {city}")
     url = "https://api.openweathermap.org/data/2.5/weather"

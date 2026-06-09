@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "concurrently --kill-others \"pnpm next:dev\" \"pnpm backend\"",
     "next:dev": "next dev --turbopack",
-
-    "backend": "bash -c 'cd ../Winky_code && source venv/bin/activate && PYTHONUNBUFFERED=1 python -O agent.py dev'",
-
+    "backend": "set PYTHONUNBUFFERED=1 && ..\\Winky_code\\venv\\Scripts\\python.exe -O ..\\Winky_code\\agent.py dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -30,6 +28,7 @@
     "jose": "^6.0.12",
     "livekit-client": "^2.15.5",
     "livekit-server-sdk": "^2.13.2",
+    "lucide-react": "^1.17.0",
     "mime": "^4.0.7",
     "motion": "^12.16.0",
     "next": "15.5.2",
@@ -47,6 +46,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "eslint-config-prettier": "^10.1.5",

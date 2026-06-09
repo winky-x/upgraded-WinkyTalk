@@ -19,7 +19,7 @@ function getConfig() {
     path.join(process.cwd(), '..', 'user_config.json'), // Dev mode: unlikely if cwd is incorrect
     path.join(process.cwd(), 'user_config.json'),       // If cwd is root
     path.join(__dirname, '../../../../user_config.json'), // Relative to compiled output (fragile)
-    'c:\\Users\\Gaurav\\Desktop\\Jarvis\\user_config.json' // Fail-safe fallback (User specific)
+    'c:\\Users\\login\\Desktop\\upgraded-WinkyTalk\\user_config.json' // Fail-safe fallback (User specific)
   ];
 
   console.log("Debug: process.cwd() is:", process.cwd());

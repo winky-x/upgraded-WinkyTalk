@@ -1,16 +1,14 @@
 {
-    "python.defaultInterpreterPath": "/workspaces/upgraded-WinkyTalk/Jarvis_code/venv/bin/python",
-    "python.terminal.activateEnvironment": true,
+    "extensions.marketplaceItemUrl": "https://visualstudio.com",
+    "extensions.marketplaceGalleryUrl": "https://visualstudio.com",
+    "python.defaultInterpreterPath": "${workspaceFolder}\\Winky_code\\venv\\Scripts\\python.exe",
     "python.analysis.autoSearchPaths": true,
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.extraPaths": [
-        "/workspaces/upgraded-WinkyTalk/Jarvis_code/venv/lib/python3.12/site-packages",
-        "/workspaces/upgraded-WinkyTalk/Jarvis_code"
+        "${workspaceFolder}\\Winky_code\\venv\\Lib\\site-packages",
+        "${workspaceFolder}\\Winky_code"
     ],
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingImports": "none"
-    },
-    "python.languageServer": "Pylance",
+    "python.languageServer": "Jedi",
     "python.analysis.typeCheckingMode": "off",
     "python.analysis.indexing": true
 }

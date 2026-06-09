@@ -49,6 +49,8 @@ livekit-protocol==1.1.2
 markdown-it-py==4.0.0
 mdurl==0.1.2
 mem0ai==1.0.2
+mcp==1.2.0
+fastmcp==0.4.1
 mpmath==1.3.0
 multidict==6.7.1
 nest-asyncio==1.6.0
